@@ -99,7 +99,8 @@ void Engine::parseArgs()
         ("speed", opts::value<float>(&options.camera_speed)->default_value(5.0f), "Camera Speed")
         ("density,d", opts::value<float>(&options.density)->default_value(1.0f), "Density")
         ("size,s", opts::value<std::vector<unsigned int>>(&options.water_size), "Water Size")
-        ("light,l", opts::value<float>(&options.light_speed)->default_value(0.05f), "Speed of Light :p");
+        ("light,l", opts::value<float>(&options.light_speed)->default_value(0.05f), "Speed of Light :p")
+        ("particles,p", opts::value<int>(&options.max_particles)->default_value(200), "Number of Particles");
 
     opts::positional_options_description pos;
     //pos.add("terrain", -1);

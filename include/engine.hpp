@@ -18,6 +18,7 @@ struct Options {
     float sample_probability;
     float density;
     float light_speed;
+    int max_particles;
 
     std::vector<unsigned int> water_size;
 };

@@ -35,7 +35,7 @@ private:
     GLuint program;
     GLuint vbo, vao, vio;
 
-    GLint loc_pos, loc_mvp, loc_view, loc_normal, loc_texture, loc_model, loc_modelView, loc_specPower, 
+    GLint loc_pos, loc_mvp, loc_view, loc_normal, loc_texture, loc_model, loc_modelView, loc_specPower,
         loc_specIntensity, loc_camPos, loc_time, loc_ambient, loc_sampler;
     GLint loc_lightDir;
 

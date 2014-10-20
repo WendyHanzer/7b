@@ -20,6 +20,7 @@ class Water;
 class AmbientLight;
 class DirectionalLight;
 class PointLight;
+class Sparkler;
 
 class Graphics {
 public:
@@ -47,6 +48,7 @@ public:
 
     Camera *camera;
     Water *water;
+    Sparkler *sparkler;
 private:
     void initGL();
     GLuint loadShader(std::string shaderFile, GLenum shaderType);

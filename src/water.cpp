@@ -79,14 +79,14 @@ void Water::init()
             vert.pos[1] = dist(gen);
             vert.pos[2] = z+density;
             geometry.push_back(vert);
-            
+
 
             vert.pos[0] = x+density;
             vert.pos[1] = dist(gen);
             vert.pos[2] = z+density;
             geometry.push_back(vert);
         }
-        
+
 
         firstx = false;
         firstz = true;
@@ -107,7 +107,7 @@ void Water::init()
     }
 
 
-    unsigned int scaledWidth = width/density, scaledHeight = height/density;    
+    unsigned int scaledWidth = width/density, scaledHeight = height/density;
     for(int x = 0; x < scaledWidth - 1; x++) {
         for(int z = 0; z < scaledHeight - 1; z++) {
             indices.push_back(z * scaledHeight + x);
@@ -322,9 +322,9 @@ void Water::setAmbient(float ambient){
             //std::cout << sum[0] << ' ' << sum[1] << ' ' << sum[2] << std::endl;
         }
         else{
-            geometry[i].normal[0] = 0; 
-            geometry[i].normal[1] = 1; 
-            geometry[i].normal[2] = 0; 
+            geometry[i].normal[0] = 0;
+            geometry[i].normal[1] = 1;
+            geometry[i].normal[2] = 0;
 
             skipped++;
         }

@@ -4,6 +4,7 @@
 #include "camera.hpp"
 #include "water.hpp"
 #include "light.hpp"
+#include "sparkler.hpp"
 
 #include "gl.hpp"
 
@@ -26,6 +27,9 @@ Graphics::~Graphics()
 
     if(camera)
         delete camera;
+
+    if(sparkler)
+        delete sparkler;
 }
 
 void Graphics::init()
@@ -88,6 +92,9 @@ void Graphics::initGL()
     shader_data[1] = loadShader("../shaders/water.fs", GL_FRAGMENT_SHADER);
     createShaderProgram("water", shader_data);
 
+    shader_data[0] = loadShader("../shaders/sparkler.vs", GL_VERTEX_SHADER);
+    shader_data[1] = loadShader("../shaders/sparkler.fs", GL_FRAGMENT_SHADER);
+    createShaderProgram("sparkler", shader_data);
 
     const auto& size = engine->getOptions().water_size;
 
@@ -96,6 +103,8 @@ void Graphics::initGL()
 
     else
         water = new Water(engine, 200, 200);
+
+    sparkler = new Sparkler(engine);
 }
 
 void Graphics::tick(float dt)
@@ -212,7 +221,7 @@ GLuint Graphics::createShaderProgram(std::string name, std::vector<GLuint> shade
 
         char buffer[512];
         glGetShaderInfoLog(program, 512, NULL, buffer); // inserts the error into the buffer
-        std::cerr << buffer << std::endl; 
+        std::cerr << buffer << std::endl;
 
         //engine->stop();
         exit(1);

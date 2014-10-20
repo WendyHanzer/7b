@@ -22,7 +22,7 @@ float speed[4];
 float amplitude[4]; // max height of waves
 vec2 direction[4];
 
-float waveheight = 3.0f;
+float waveheight = 3.0;
 int numWaves;
 
 // SOURCE: http://jayconrod.com/posts/34/water-simulation-in-glsl
@@ -73,26 +73,26 @@ void main() {
 
 	// wave 1
 	wavelength[0] = 800 * pi;
-	speed[0] = 1000.0f;
-	amplitude[0] = 30f;
-	direction[0] = vec2(0.0, 1.0); 
+	speed[0] = 1000.0;
+	amplitude[0] = 30;
+	direction[0] = vec2(0.0, 1.0);
 
 	// wave 2
 	wavelength[1] = 500 * pi;
-	speed[1] = 37.0f;
-	amplitude[1] = 13.0f;
-	direction[1] = vec2(1.0, 0.5); 
+	speed[1] = 37.0;
+	amplitude[1] = 13.0;
+	direction[1] = vec2(1.0, 0.5);
 
 	// wave 3
 	wavelength[2] = 223 * pi;
 	speed[2] = 9.5f;
-	amplitude[2] = 10.0f;
-	direction[2] = vec2(-0.4, 0.6); 
+	amplitude[2] = 10.0;
+	direction[2] = vec2(-0.4, 0.6);
 
 	// wave 3
 	wavelength[3] = 500 * pi;
-	speed[3] = 60.0f;
-	amplitude[3] = 10.0f;
+	speed[3] = 60.0;
+	amplitude[3] = 10.0;
 	direction[3] = vec2(-0.4, -0.6);
 
 	vec4 pos = vec4(vs_position, 1.0);

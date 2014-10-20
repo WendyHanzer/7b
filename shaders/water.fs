@@ -49,7 +49,7 @@ void main() {
 
     // calculate specular color
     float diffuseFactor = dot(fs_normal, d_light.direction);
-    float specularColor = vec4(0,0,0,0);
+    vec4 specularColor = vec4(0,0,0,0);
 
     if(diffuseFactor > 0){
         vec3 vertexToView = normalize(cameraPos - world_pos);
@@ -57,7 +57,7 @@ void main() {
         float specularFactor = max(0.0, dot(vertexToView, lightReflect));
         specularFactor = pow(specularFactor, specularPower);
         if(specularFactor > 0){
-            specularColor = vec4(d_light.color, 1.0f) * specularIntensity * specularFactor;
+            specularColor = vec4(d_light.color, 1.0) * specularIntensity * specularFactor;
         }
     }
 
