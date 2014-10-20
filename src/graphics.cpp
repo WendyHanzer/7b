@@ -110,6 +110,7 @@ void Graphics::initGL()
 void Graphics::tick(float dt)
 {
     water->tick(dt);
+    sparkler->tick(dt);
 }
 
 void Graphics::render()
@@ -120,6 +121,7 @@ void Graphics::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     water->render();
+    sparkler->render();
 
     SDL_GL_SwapWindow(window);
 }
