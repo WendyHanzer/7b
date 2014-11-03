@@ -10,9 +10,12 @@
 
 #include <iostream>
 
+Engine* Engine::currentEngine = nullptr;
+
 Engine::Engine(int argc, char **argv)
     : _argc(argc), _argv(argv)
 {
+    Engine::currentEngine = this;
     parseArgs();
     init();
 }
@@ -47,7 +50,6 @@ int Engine::run()
 
         input->tick(dt);
         graphics->tick(dt);
-        graphics->render();
     }
 
     return 0;
@@ -87,8 +89,8 @@ void Engine::parseArgs()
     opts::options_description desc("CS791a Program Options");
     opts::variables_map vm;
 
-    options.water_size.push_back(2000);
-    options.water_size.push_back(2000);
+    options.water_size.push_back(200);
+    options.water_size.push_back(200);
 
     desc.add_options()
         ("help,h", "Print Help Message")
@@ -129,4 +131,8 @@ void Engine::parseArgs()
 
     options.verbose = vm.count("verbose");
     options.wireframe = vm.count("wireframe");
+}
+
+Engine* Engine::getEngine() {
+    return currentEngine;
 }

@@ -10,17 +10,18 @@
 #include <SDL.h>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 
 
 class Engine;
 class Camera;
-class Water;
+//class Water;
 class AmbientLight;
 class DirectionalLight;
 class PointLight;
-class Sparkler;
+//class Sparkler;
+class Texture;
+class Program;
+class Cube;
 
 class Graphics {
 public:
@@ -37,26 +38,22 @@ public:
     void windowResized();
 
     void getWindowSize(int &w, int &h) const;
-    GLuint getShaderProgram(const std::string& name) const;
-    const std::vector<GLuint>& getShaderData(const std::string& name) const;
-
-    GLuint createTextureFromFile(std::string fileName, GLenum target);
+    Program* getShaderProgram(const std::string& name) const;
 
     SDL_Window* getRenderWindow() const {return window;}
-    void setClearColor(glm::vec3);
+    void setClearColor(const glm::vec3& color);
     glm::mat4 view, projection;
 
     Camera *camera;
-    Water *water;
-    Sparkler *sparkler;
+    Cube *cube;
+    //Water *water;
+    //Sparkler *sparkler;
 private:
     void initGL();
-    GLuint loadShader(std::string shaderFile, GLenum shaderType);
-    GLuint createShaderProgram(std::string name, std::vector<GLuint> shader_data);
+    void initScenes();
 
     Engine *engine;
-    std::map<std::string, GLuint> programs;
-    std::map<std::string, std::vector<GLuint>> shaders;
+    std::map<std::string, Program*> programs;
 
     SDL_Window *window;
     SDL_GLContext gl_context;

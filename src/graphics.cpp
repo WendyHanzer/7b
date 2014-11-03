@@ -2,13 +2,16 @@
 #include "graphics.hpp"
 #include "vertex.hpp"
 #include "camera.hpp"
-#include "water.hpp"
 #include "light.hpp"
-#include "sparkler.hpp"
+#include "texture.hpp"
+#include "lighting.hpp"
+#include "cube.hpp"
 
 #include "gl.hpp"
 
 #include <FreeImagePlus.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -22,14 +25,8 @@ Graphics::Graphics(Engine *eng)
 
 Graphics::~Graphics()
 {
-    if(water)
-        delete water;
-
     if(camera)
         delete camera;
-
-    if(sparkler)
-        delete sparkler;
 }
 
 void Graphics::init()
@@ -58,6 +55,7 @@ void Graphics::init()
     SDL_GL_SetSwapInterval(1);
 
     initGL();
+    initScenes();
 }
 
 void Graphics::initGL()
@@ -85,32 +83,13 @@ void Graphics::initGL()
     updateView();
     windowResized();
 
-
-    std::vector<GLuint> shader_data(2);
-
-    shader_data[0] = loadShader("../shaders/water.vs", GL_VERTEX_SHADER);
-    shader_data[1] = loadShader("../shaders/water.fs", GL_FRAGMENT_SHADER);
-    createShaderProgram("water", shader_data);
-
-    shader_data[0] = loadShader("../shaders/sparkler.vs", GL_VERTEX_SHADER);
-    shader_data[1] = loadShader("../shaders/sparkler.fs", GL_FRAGMENT_SHADER);
-    createShaderProgram("sparkler", shader_data);
-
-    const auto& size = engine->getOptions().water_size;
-
-    if(size.size() == 2)
-        water = new Water(engine, size[0], size[1]);
-
-    else
-        water = new Water(engine, 200, 200);
-
-    sparkler = new Sparkler(engine);
+    programs["lighting"] = new LightingProgram();
 }
 
 void Graphics::tick(float dt)
 {
-    water->tick(dt);
-    sparkler->tick(dt);
+    cube->tick(dt);
+    render();
 }
 
 void Graphics::render()
@@ -120,8 +99,7 @@ void Graphics::render()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    water->render();
-    sparkler->render();
+    cube->render();
 
     SDL_GL_SwapWindow(window);
 }
@@ -156,131 +134,17 @@ void Graphics::getWindowSize(int &w, int &h) const
     SDL_GetWindowSize(window, &w, &h);
 }
 
-GLuint Graphics::getShaderProgram(const std::string& name) const
+Program* Graphics::getShaderProgram(const std::string& name) const
 {
     return programs.at(name);
 }
 
-const std::vector<GLuint>& Graphics::getShaderData(const std::string& name) const
-{
-    return shaders.at(name);
+void Graphics::setClearColor(const glm::vec3& color){
+    glClearColor(color[0], color[1], color[2], 1.0f);
 }
 
-GLuint Graphics::loadShader(std::string shaderFile, GLenum shaderType)
+void Graphics::initScenes()
 {
-    std::ifstream fin(shaderFile);
-    if(!fin) {
-        std::cerr << "Unable to open shader file: " << shaderFile << std::endl;
-        engine->stop();
-    }
-
-    std::string file_contents;
-    fin.seekg(0, std::ios::end);
-    auto length = fin.tellg();
-    fin.seekg(0, std::ios::beg);
-
-    file_contents.reserve(length);
-    auto fileIterator = std::istreambuf_iterator<char>(fin);
-    auto fileIteratorEnd = std::istreambuf_iterator<char>();
-    file_contents.assign(fileIterator, fileIteratorEnd);
-
-    fin.close();
-
-    const char *shaderStr = file_contents.c_str();
-
-    GLuint shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &shaderStr, NULL);
-    glCompileShader(shader);
-
-    char buffer[512];
-    glGetShaderInfoLog(shader, 512, NULL, buffer);
-    GLint shader_status;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &shader_status);
-    if(!shader_status) {
-        std::string shaderTypeStr = "shader";
-        std::cerr << "Failed to compile " << shaderTypeStr << " loaded from " << shaderFile << std::endl;
-        std::cerr << "Compile Error: " << buffer << std::endl;
-        //engine->stop();
-        exit(1);
-    }
-
-    return shader;
-}
-
-GLuint Graphics::createShaderProgram(std::string name, std::vector<GLuint> shader_data)
-{
-    GLuint program = glCreateProgram();
-    for(auto shader : shader_data) {
-        glAttachShader(program, shader);
-    }
-
-    glLinkProgram(program);
-
-    GLint shader_status;
-    glGetProgramiv(program, GL_LINK_STATUS, &shader_status);
-    if(!shader_status) {
-        std::cerr << "Unable to create shader program!" << std::endl;
-
-        char buffer[512];
-        glGetShaderInfoLog(program, 512, NULL, buffer); // inserts the error into the buffer
-        std::cerr << buffer << std::endl;
-
-        //engine->stop();
-        exit(1);
-    }
-
-    programs[name] = program;
-    shaders[name] = shader_data;
-
-    if(engine->getOptions().verbose)
-        std::cout << "Created GL Program: " << name << ' ' << program << std::endl;
-
-    return program;
-}
-
-GLuint Graphics::createTextureFromFile(std::string fileName, GLenum target)
-{
-    fipImage image;
-
-    if(image.load(fileName.c_str())) {
-        if(image.getImageType() == FIT_UNKNOWN) {
-            std::cerr << "Unknow image type for image: " << fileName << std::endl;
-            engine->stop(1);
-        }
-
-        image.convertTo32Bits();
-
-        GLuint texId;
-
-        glActiveTexture(GL_TEXTURE0);
-        glGenTextures(1, &texId);
-
-        if(engine->getOptions().verbose) {
-            std::cout << "Texture ID: " << texId << std::endl;
-        }
-
-        glBindTexture(target, texId);
-        glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        if(target == GL_TEXTURE_2D) {
-            glTexImage2D(target, 0, GL_RGBA, image.getWidth(), image.getHeight(),
-                0, GL_BGRA, GL_UNSIGNED_BYTE, (void*) image.accessPixels());
-        }
-        else {
-            glTexImage1D(target, 0, GL_RGBA, image.getWidth(), 0,
-                GL_RGBA, GL_UNSIGNED_BYTE, (void*) image.accessPixels());
-        }
-
-        return texId;
-    }
-
-    else {
-        std::cerr << "Unable to open image: " << fileName << std::endl;
-        return 0;
-    }
-}
-
-void Graphics::setClearColor(glm::vec3 color){
-    glClearColor(color[0], color[1], color[2], 1);
+    cube = new Cube();
+    cube->scale(100.0f);
 }

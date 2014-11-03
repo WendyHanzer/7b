@@ -2,7 +2,6 @@
 #include "input.hpp"
 #include "graphics.hpp"
 #include "camera.hpp"
-#include "water.hpp"
 
 #include <SDL.h>
 
@@ -209,6 +208,7 @@ void Input::handleMovementKeys()
     if(keyPresses[SDLK_f])
         engine->graphics->camera->moveDown();
 
+    /*
     if(keyPresses[SDLK_LEFT])
         if(engine->graphics->water->lightAngle > 0){
             engine->graphics->water->lightAngle -= engine->getOptions().light_speed;
@@ -243,5 +243,5 @@ void Input::handleMovementKeys()
 
             engine->graphics->water->setAmbient(c * 0.5);
         }
-
+    */
 }

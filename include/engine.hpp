@@ -39,6 +39,8 @@ public:
     const Options& getOptions() const;
     std::vector<std::string> getCmdArgs() const;
 
+    static Engine* getEngine();
+
     Input *input;
     Graphics *graphics;
 private:
@@ -47,6 +49,8 @@ private:
     char **_argv;
 
     Options options;
+
+    static Engine* currentEngine;
 };
 
 #endif // ENGINE_HPP

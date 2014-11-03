@@ -3,9 +3,13 @@ cmake_minimum_required(VERSION 2.8)
 project(cs791a)
 
 include_directories("include")
+include_directories("include/programs")
+include_directories("include/scenes")
 
 aux_source_directory(src Engine_src)
-set(Engine_src ${Engine_src}) #${gui_src})
+aux_source_directory("src/programs" Program_src)
+aux_source_directory("src/scenes" Scene_src)
+set(Engine_src ${Engine_src} ${Program_src} ${Scene_src})
 #add_library(GameEngine ${GameEngine_src})
 add_executable(cs791a ${Engine_src})
 
