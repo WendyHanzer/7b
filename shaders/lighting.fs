@@ -62,5 +62,5 @@ void main() {
     }
 
     totalLight += specularColor;
-    glColor = vec4(0,1,0,1);//texture(tex, fs_uv) * totalLight;
+    glColor = texture(tex, fs_uv) * totalLight;
 }

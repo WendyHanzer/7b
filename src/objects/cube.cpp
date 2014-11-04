@@ -4,17 +4,17 @@
 #include "graphics.hpp"
 #include "programs/lighting.hpp"
 #include "gl.hpp"
+#include "mesh.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include <assimp/texture.h>
 
-Cube::Cube(const glm::vec3& pos, float scaleValue)
+#include <iostream>
+
+Cube::Cube(const glm::vec3& pos)
 {
     init();
-    scale(scaleValue);
+
+    model = glm::translate(model, pos);
 }
 
 Cube::~Cube()
@@ -27,44 +27,9 @@ void Cube::init()
     program = Engine::getEngine()->graphics->getShaderProgram("lighting");
     texture = new Texture("../assets/reflection.jpg", GL_TEXTURE_2D);
 
-    geometry = {
-    {{-1.0f,-1.0f,-1.0f}}, // triangle 1 : begin
-    {{-1.0f,-1.0f, 1.0f}},
-    {{-1.0f, 1.0f, 1.0f}}, // triangle 1 : end
-    {{1.0f, 1.0f,-1.0f}}, // triangle 2 : begin
-    {{-1.0f,-1.0f,-1.0f}},
-    {{-1.0f, 1.0f,-1.0f}}, // triangle 2 : end
-    {{1.0f,-1.0f, 1.0f}},
-    {{-1.0f,-1.0f,-1.0f}},
-    {{1.0f,-1.0f,-1.0f}},
-    {{1.0f, 1.0f,-1.0f}},
-    {{1.0f,-1.0f,-1.0f}},
-    {{-1.0f,-1.0f,-1.0f}},
-    {{-1.0f,-1.0f,-1.0f}},
-    {{-1.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f,-1.0f}},
-    {{1.0f,-1.0f, 1.0f}},
-    {{-1.0f,-1.0f, 1.0f}},
-    {{-1.0f,-1.0f,-1.0f}},
-    {{-1.0f, 1.0f, 1.0f}},
-    {{-1.0f,-1.0f, 1.0f}},
-    {{1.0f,-1.0f, 1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{1.0f,-1.0f,-1.0f}},
-    {{1.0f, 1.0f,-1.0f}},
-    {{1.0f,-1.0f,-1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{1.0f,-1.0f, 1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{1.0f, 1.0f,-1.0f}},
-    {{-1.0f, 1.0f,-1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f,-1.0f}},
-    {{-1.0f, 1.0f, 1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f, 1.0f}},
-    {{1.0f,-1.0f, 1.0f}}
-};
+    geometry = Mesh::load("../assets/objects/cube.obj");
+
+    //std::cout << "Geometry: " << geometry.size() << std::endl; 
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -72,6 +37,14 @@ void Cube::init()
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * geometry.size(), geometry.data(), GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(program->getLocation("vs_pos"),
+                            3,
+                            GL_FLOAT,
+                            GL_FALSE,
+                            sizeof(Vertex),
+                            (void*)offsetof(Vertex,pos));
 }
 
 void Cube::tick(float dt)
@@ -89,15 +62,7 @@ void Cube::render()
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-    glEnableVertexAttribArray(program->getLocation("vs_pos"));
-
-    glVertexAttribPointer(program->getLocation("vs_pos"),
-                            3,
-                            GL_FLOAT,
-                            GL_FALSE,
-                            sizeof(Vertex),
-                            (void*)offsetof(Vertex,pos));
+    glEnableVertexAttribArray(0); 
 
     texture->bind(GL_TEXTURE0);
 

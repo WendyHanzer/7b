@@ -13,7 +13,7 @@ class Texture;
 
 class Cube : public Entity {
 public:
-    Cube(const glm::vec3& pos = glm::vec3(0.0f,0.0f,0.0f), float scaleValue = 1.0f);
+    Cube(const glm::vec3& pos = glm::vec3(0.0f,0.0f,0.0f));
     virtual ~Cube();
 
     virtual void init();

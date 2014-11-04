@@ -14,9 +14,7 @@ public:
     void init();
     void render();
 
-private:
-    std::string mesh_file;
-    std::vector<Vertex> geometry;
+    static std::vector<Vertex> load(const std::string& fileName);
 };
 
 #endif // MESH_HPP

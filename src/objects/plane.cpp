@@ -4,6 +4,7 @@
 #include "graphics.hpp"
 #include "programs/lighting.hpp"
 #include "gl.hpp"
+#include "mesh.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <assimp/Importer.hpp>
@@ -26,44 +27,7 @@ void Plane::init()
     program = Engine::getEngine()->graphics->getShaderProgram("lighting");
     texture = new Texture("../assets/reflection.jpg", GL_TEXTURE_2D);
 
-    geometry = {
-    {{-1.0f,-1.0f,-1.0f}}, // triangle 1 : begin
-    {{-1.0f,-1.0f, 1.0f}},
-    {{-1.0f, 1.0f, 1.0f}}, // triangle 1 : end
-    {{1.0f, 1.0f,-1.0f}}, // triangle 2 : begin
-    {{-1.0f,-1.0f,-1.0f}},
-    {{-1.0f, 1.0f,-1.0f}}, // triangle 2 : end
-    {{1.0f,-1.0f, 1.0f}},
-    {{-1.0f,-1.0f,-1.0f}},
-    {{1.0f,-1.0f,-1.0f}},
-    {{1.0f, 1.0f,-1.0f}},
-    {{1.0f,-1.0f,-1.0f}},
-    {{-1.0f,-1.0f,-1.0f}},
-    {{-1.0f,-1.0f,-1.0f}},
-    {{-1.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f,-1.0f}},
-    {{1.0f,-1.0f, 1.0f}},
-    {{-1.0f,-1.0f, 1.0f}},
-    {{-1.0f,-1.0f,-1.0f}},
-    {{-1.0f, 1.0f, 1.0f}},
-    {{-1.0f,-1.0f, 1.0f}},
-    {{1.0f,-1.0f, 1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{1.0f,-1.0f,-1.0f}},
-    {{1.0f, 1.0f,-1.0f}},
-    {{1.0f,-1.0f,-1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{1.0f,-1.0f, 1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{1.0f, 1.0f,-1.0f}},
-    {{-1.0f, 1.0f,-1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f,-1.0f}},
-    {{-1.0f, 1.0f, 1.0f}},
-    {{1.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f, 1.0f}},
-    {{1.0f,-1.0f, 1.0f}}
-};
+    geometry = Mesh::load("../assets/objects/plane.obj"); 
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -83,7 +47,7 @@ void Plane::init()
 
 void Plane::tick(float dt)
 {
-    //model = glm::rotate(model, 10.0f * dt, glm::vec3(0,1,0));
+    model = glm::rotate(model, -10.0f * dt, glm::vec3(0,1,0));
 }
 
 void Plane::render()

@@ -1,5 +1,5 @@
-#ifndef CUBE_HPP
-#define CUBE_HPP
+#ifndef PLANE_HPP
+#define PLANE_HPP
 
 #include <vector>
 
@@ -33,4 +33,4 @@ private:
     GLuint vbo, vao;
 };
 
-#endif // CUBE_HPP
+#endif // PLANE_HPP
