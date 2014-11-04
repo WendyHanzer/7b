@@ -5,11 +5,14 @@ project(cs791a)
 include_directories("include")
 include_directories("include/programs")
 include_directories("include/scenes")
+include_directories("include/objects")
 
 aux_source_directory(src Engine_src)
 aux_source_directory("src/programs" Program_src)
 aux_source_directory("src/scenes" Scene_src)
-set(Engine_src ${Engine_src} ${Program_src} ${Scene_src})
+aux_source_directory("src/objects" Object_src)
+
+set(Engine_src ${Engine_src} ${Program_src} ${Scene_src} ${Object_src})
 #add_library(GameEngine ${GameEngine_src})
 add_executable(cs791a ${Engine_src})
 

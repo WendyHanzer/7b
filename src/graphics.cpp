@@ -6,6 +6,7 @@
 #include "texture.hpp"
 #include "lighting.hpp"
 #include "cube.hpp"
+#include "shadowmap.hpp"
 
 #include "gl.hpp"
 
@@ -76,6 +77,12 @@ void Graphics::initGL()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     //glEnable(GL_TEXTURE_2D);
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+
+    //glShadeModel (GL_FLAT);
+
+    //glEnable(GL_MULTISAMPLE_ARB);
 
     if(engine->getOptions().wireframe)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // wireframe
@@ -88,7 +95,8 @@ void Graphics::initGL()
 
 void Graphics::tick(float dt)
 {
-    cube->tick(dt);
+    //cube->tick(dt);
+    scene->tick(dt);
     render();
 }
 
@@ -99,7 +107,8 @@ void Graphics::render()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    cube->render();
+    scene->render();
+    //cube->render();
 
     SDL_GL_SwapWindow(window);
 }
@@ -145,6 +154,7 @@ void Graphics::setClearColor(const glm::vec3& color){
 
 void Graphics::initScenes()
 {
-    cube = new Cube();
-    cube->scale(100.0f);
+    //cube = new Cube();
+    scene = new ShadowMapScene();
+    scene->init();
 }

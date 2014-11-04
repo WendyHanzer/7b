@@ -71,6 +71,14 @@ void Plane::init()
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * geometry.size(), geometry.data(), GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(program->getLocation("vs_pos"),
+                            3,
+                            GL_FLOAT,
+                            GL_FALSE,
+                            sizeof(Vertex),
+                            (void*)offsetof(Vertex,pos));
 }
 
 void Plane::tick(float dt)
@@ -88,15 +96,7 @@ void Plane::render()
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-    glEnableVertexAttribArray(program->getLocation("vs_pos"));
-
-    glVertexAttribPointer(program->getLocation("vs_pos"),
-                            3,
-                            GL_FLOAT,
-                            GL_FALSE,
-                            sizeof(Vertex),
-                            (void*)offsetof(Vertex,pos));
+    glEnableVertexAttribArray(0);
 
     texture->bind(GL_TEXTURE0);
 

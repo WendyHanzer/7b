@@ -6,11 +6,11 @@
 #include <string>
 
 #include "gl.hpp"
+#include "scene.hpp"
 
 #include <SDL.h>
 
 #include <glm/glm.hpp>
-
 
 class Engine;
 class Camera;
@@ -45,7 +45,8 @@ public:
     glm::mat4 view, projection;
 
     Camera *camera;
-    Cube *cube;
+    //Cube *cube;
+    Scene *scene;
     //Water *water;
     //Sparkler *sparkler;
 private:
