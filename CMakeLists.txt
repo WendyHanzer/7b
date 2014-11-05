@@ -20,7 +20,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") #apple
     message(STATUS "Mac OS Detected")
     include_directories("/usr/local/include/SDL2")
     include_directories("/usr/local/include/freetype2")
-    set(LIBRARIES_TO_LINK "SDL2" "boost_program_options" "freeimageplus")
+    set(LIBRARIES_TO_LINK "SDL2" "boost_program_options" "freeimageplus" "assimp")
     #set(MAC_FRAMEWORKS "-framework OpenGL")
     set(CMAKE_CXX_FLAGS "-g -Wall -std=c++11 -stdlib=libc++ -O2")
 

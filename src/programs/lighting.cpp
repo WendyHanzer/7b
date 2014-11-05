@@ -50,7 +50,7 @@ void LightingProgram::initProgram()
         std::cerr << "Unable to create shader program!" << std::endl;
 
         char buffer[512];
-        glGetShaderInfoLog(program, 512, NULL, buffer); // inserts the error into the buffer
+        glGetProgramInfoLog(program, 512, NULL, buffer); // inserts the error into the buffer
         std::cerr << buffer << std::endl;
 
         exit(1);
