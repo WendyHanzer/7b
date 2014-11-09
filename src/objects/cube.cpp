@@ -10,8 +10,9 @@
 
 #include <iostream>
 
-Cube::Cube(const glm::vec3& pos)
+Cube::Cube(Program *prog, const glm::vec3& pos)
 {
+    program = prog;
     init();
 
     model = glm::translate(model, pos);
@@ -24,7 +25,6 @@ Cube::~Cube()
 
 void Cube::init()
 {
-    program = Engine::getEngine()->graphics->getShaderProgram("lighting");
     texture = new Texture("../assets/reflection.jpg", GL_TEXTURE_2D);
 
     geometry = Mesh::load("../assets/objects/cube.obj");
@@ -71,12 +71,6 @@ void Cube::tick(float dt)
 
 void Cube::render()
 {
-    glm::mat4 mvp = Engine::getEngine()->graphics->projection * Engine::getEngine()->graphics->view * model;
-    program->bind();
-    program->set("mvp", mvp);
-    program->set("tex", 0);
-    program->set("modelMatrix", model);
-
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glEnableVertexAttribArray(0);
@@ -92,7 +86,6 @@ void Cube::render()
     glDisableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    program->unbind();
 }
 
 void Cube::scale(float scaleValue)

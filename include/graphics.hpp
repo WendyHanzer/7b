@@ -39,6 +39,8 @@ public:
 
     SDL_Window* getRenderWindow() const {return window;}
     void setClearColor(const glm::vec3& color);
+
+    Scene* getScene(const std::string& name) const {return scenes.at(name);}
     glm::mat4 view, projection;
 
     Camera *camera;
@@ -52,6 +54,7 @@ private:
 
     Engine *engine;
     std::map<std::string, Program*> programs;
+    std::map<std::string, Scene*> scenes;
 
     SDL_Window *window;
     SDL_GLContext gl_context;

@@ -9,6 +9,7 @@
 class Cube;
 class Plane;
 class Program;
+class Entity;
 
 class ShadowMapScene : public Scene {
 public:
@@ -27,6 +28,7 @@ private:
     DirectionalLight *dirLight;
     PointLight *pointLight;
     //std::vector<Light*> lights;
+    std::vector<Entity*> entities;
 };
 
 #endif // SHADOW_MAP_SCENE_HPP

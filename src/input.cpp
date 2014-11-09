@@ -48,6 +48,13 @@ void Input::tick(float dt)
                         engine->stop();
                     break;
 
+                    case SDLK_1:
+                        engine->graphics->scene = engine->graphics->getScene("shadow_map");
+                    break;
+
+                    case SDLK_2:
+                        engine->graphics->scene = engine->graphics->getScene("deferred_shading");
+                    break;
 
                     case SDLK_w:
                         keyPresses[SDLK_w] = true;

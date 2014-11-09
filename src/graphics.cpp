@@ -7,6 +7,8 @@
 #include "lighting.hpp"
 #include "cube.hpp"
 #include "shadowmap.hpp"
+#include "deferred_shading_prog.hpp"
+#include "deferred_shading.hpp"
 
 #include "gl.hpp"
 
@@ -91,6 +93,7 @@ void Graphics::initGL()
     windowResized();
 
     programs["lighting"] = new LightingProgram();
+    programs["deferred_shading"] = new DeferredShadingProgram();
 }
 
 void Graphics::tick(float dt)
@@ -105,7 +108,7 @@ void Graphics::render()
     updateCamera();
     updateView();
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     scene->render();
     //cube->render();
@@ -154,7 +157,12 @@ void Graphics::setClearColor(const glm::vec3& color){
 
 void Graphics::initScenes()
 {
-    //cube = new Cube();
-    scene = new ShadowMapScene();
-    scene->init();
+    scenes["shadow_map"] = new ShadowMapScene();
+    scenes["deferred_shading"] = new DeferredShadingScene();
+
+    for(auto& kv : scenes) {
+        kv.second->init();
+    }
+
+    scene = scenes["deferred_shading"];
 }

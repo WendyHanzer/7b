@@ -13,7 +13,7 @@ class Texture;
 
 class Plane : public Entity {
 public:
-    Plane(int width = 200, int height = 200);
+    Plane(Program *prog, int width = 200, int height = 200);
     virtual ~Plane();
 
     virtual void init();

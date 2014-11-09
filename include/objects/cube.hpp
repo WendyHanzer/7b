@@ -13,7 +13,7 @@ class Texture;
 
 class Cube : public Entity {
 public:
-    Cube(const glm::vec3& pos = glm::vec3(0.0f,0.0f,0.0f));
+    Cube(Program *prog, const glm::vec3& pos = glm::vec3(0.0f,0.0f,0.0f));
     virtual ~Cube();
 
     virtual void init();
@@ -28,7 +28,6 @@ private:
     std::vector<Vertex> geometry;
     Program *program;
     Texture *texture;
-    glm::mat4 model;
 
     GLuint vbo, vao;
 };

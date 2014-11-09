@@ -7,13 +7,10 @@
 #include "mesh.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include <assimp/texture.h>
 
-Plane::Plane(int width, int height)
+Plane::Plane(Program *prog, int width, int height)
 {
+    program = prog;
     init();
 }
 
@@ -24,7 +21,6 @@ Plane::~Plane()
 
 void Plane::init()
 {
-    program = Engine::getEngine()->graphics->getShaderProgram("lighting");
     texture = new Texture("../assets/reflection.jpg", GL_TEXTURE_2D);
 
     geometry = Mesh::load("../assets/objects/plane.obj");
@@ -73,12 +69,6 @@ void Plane::tick(float dt)
 
 void Plane::render()
 {
-    glm::mat4 mvp = Engine::getEngine()->graphics->projection * Engine::getEngine()->graphics->view * model;
-    program->bind();
-    program->set("mvp", mvp);
-    program->set("tex", 0);
-    program->set("modelMatrix", model);
-
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glEnableVertexAttribArray(program->getLocation("vs_pos"));
@@ -93,7 +83,6 @@ void Plane::render()
     glDisableVertexAttribArray(program->getLocation("vs_norm"));
     glDisableVertexAttribArray(program->getLocation("vs_uv"));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    program->unbind();
 }
 
 void Plane::scale(float scaleValue)
