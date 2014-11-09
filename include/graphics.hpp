@@ -15,9 +15,6 @@
 class Engine;
 class Camera;
 //class Water;
-class AmbientLight;
-class DirectionalLight;
-class PointLight;
 //class Sparkler;
 class Texture;
 class Program;
@@ -58,10 +55,6 @@ private:
 
     SDL_Window *window;
     SDL_GLContext gl_context;
-
-    std::vector<AmbientLight*> ambient_lights;
-    std::vector<DirectionalLight*> directional_lights;
-    std::vector<PointLight*> point_lights;
 };
 
 #endif // GRAPHICS_HPP

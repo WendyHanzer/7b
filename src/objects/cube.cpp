@@ -29,7 +29,7 @@ void Cube::init()
 
     geometry = Mesh::load("../assets/objects/cube.obj");
 
-    //std::cout << "Geometry: " << geometry.size() << std::endl; 
+    //std::cout << "Geometry: " << geometry.size() << std::endl;
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -45,6 +45,23 @@ void Cube::init()
                             GL_FALSE,
                             sizeof(Vertex),
                             (void*)offsetof(Vertex,pos));
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(program->getLocation("vs_norm"),
+                            3,
+                            GL_FLOAT,
+                            GL_FALSE,
+                            sizeof(Vertex),
+                            (void*)offsetof(Vertex,normal));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(program->getLocation("vs_uv"),
+                            2,
+                            GL_FLOAT,
+                            GL_FALSE,
+                            sizeof(Vertex),
+                            (void*)offsetof(Vertex,texture));
+
 }
 
 void Cube::tick(float dt)
@@ -57,16 +74,22 @@ void Cube::render()
     glm::mat4 mvp = Engine::getEngine()->graphics->projection * Engine::getEngine()->graphics->view * model;
     program->bind();
     program->set("mvp", mvp);
-    program->set("ambientIntensity", 1.0f);
     program->set("tex", 0);
+    program->set("modelMatrix", model);
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glEnableVertexAttribArray(0); 
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 
     texture->bind(GL_TEXTURE0);
 
     glDrawArrays(GL_TRIANGLES, 0, geometry.size());
+
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     program->unbind();

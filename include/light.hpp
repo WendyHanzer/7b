@@ -5,38 +5,39 @@
 
 #include <glm/glm.hpp>
 
-class Engine;
-
-class AmbientLight
+struct AmbientLight
 {
 public:
-    AmbientLight(Engine *eng, const glm::vec3& c, float i);
+    AmbientLight(const glm::vec3& c, float i, float diff)
+        : color(c), intensity(i), diffIntensity(diff) {}
 
-    Engine *engine;
     glm::vec3 color;
     float intensity;
-};
-
-class DirectionalLight : public AmbientLight
-{
-public:
-    DirectionalLight(Engine *eng, const glm::vec3 & c, const glm::vec3& dir, float i, float diff);
-
-    glm::vec3 direction;
     float diffIntensity;
 };
 
-class PointLight : public AmbientLight
+struct DirectionalLight : public AmbientLight
 {
 public:
-    PointLight(Engine *eng, const glm::vec3& c, const glm::vec3 &p, float i, float diff);
+    DirectionalLight(const glm::vec3 & c, const glm::vec3& dir, float i, float diff)
+        : AmbientLight(c, i, diff), direction(dir) {}
+
+    glm::vec3 direction;
+};
+
+struct PointLight : public AmbientLight
+{
+public:
+    PointLight(const glm::vec3& c, const glm::vec3 &p, float i, float diff)
+        : AmbientLight(c, i, diff), pos(p) {}
 
     struct {
         float constant, linear, exp;
-    } Attenuation;
+    } attenuation;
 
     glm::vec3 pos;
-    float diffIntensity;
 };
+
+using Light = AmbientLight;
 
 #endif // LIGHT_HPP

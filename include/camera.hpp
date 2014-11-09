@@ -24,6 +24,7 @@ public:
 
     glm::mat4 getView() const;
     glm::vec3 getPos() const { return pos; }
+    glm::vec3 getOrientation() const { return orientation; }
 
 private:
     Engine *engine;

@@ -18,6 +18,7 @@ public:
     void tick(float dt);
     void stop();
 
+    const std::map<int, bool>& getKeyMap() {return keyPresses;}
 private:
     void resetKeyPresses();
     void handleMovementKeys();
