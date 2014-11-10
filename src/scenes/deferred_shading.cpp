@@ -75,6 +75,8 @@ void DeferredShadingScene::render()
     glBlitFramebuffer(0, 0, windowWidth, windowHeight, halfW, 0, windowWidth, halfH, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
     program->unbind();
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 void DeferredShadingScene::scale(float scaleValue)

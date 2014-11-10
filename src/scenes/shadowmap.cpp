@@ -62,6 +62,7 @@ void ShadowMapScene::render()
 {
     auto camera = Engine::getEngine()->graphics->camera;
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     program->bind();
     program->set("ambientIntensity", dirLight->intensity);
     program->set("diffuseIntensity", dirLight->diffIntensity);
