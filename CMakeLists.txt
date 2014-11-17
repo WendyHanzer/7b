@@ -38,8 +38,9 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     find_package(Boost REQUIRED COMPONENTS program_options)
     #pkg_search_module(PYTHON REQUIRED python2)
     include_directories(${SDL2_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${ASSIMP_INCLUDE_DIRS})
-
+    include_directories("/usr/include/gdal")
     set(LIBRARIES_TO_LINK ${SDL2_LIBRARIES} ${GLEW_LIBRARIES} ${Boost_LIBRARIES} ${ASSIMP_LIBRARIES} "freeimageplus")
+    set(LIBRARIES_TO_LINK ${LIBRARIES_TO_LINK} "gdal")
 
 else()
     message(STATUS "Windows OS Detected")

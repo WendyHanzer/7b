@@ -13,7 +13,7 @@ public:
 
     virtual void scale(float scaleValue) {}
 
-    const glm::mat4 getModel() const {return model;}
+    const glm::mat4& getModel() const {return model;}
 
 protected:
     glm::mat4 model;
