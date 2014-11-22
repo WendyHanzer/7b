@@ -37,7 +37,7 @@ void Plane::init()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * geometry.size(), geometry.data(), GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(program->getLocation("vs_pos"));
+    glEnableVertexAttribArray(0);
     glVertexAttribPointer(program->getLocation("vs_pos"),
                             3,
                             GL_FLOAT,
@@ -45,7 +45,7 @@ void Plane::init()
                             sizeof(Vertex),
                             (void*)offsetof(Vertex,pos));
 
-    glEnableVertexAttribArray(program->getLocation("vs_norm"));
+    glEnableVertexAttribArray(1);
     glVertexAttribPointer(program->getLocation("vs_norm"),
                             3,
                             GL_FLOAT,
@@ -53,7 +53,7 @@ void Plane::init()
                             sizeof(Vertex),
                             (void*)offsetof(Vertex,normal));
 
-    glEnableVertexAttribArray(program->getLocation("vs_uv"));
+    glEnableVertexAttribArray(2);
     glVertexAttribPointer(program->getLocation("vs_uv"),
                             2,
                             GL_FLOAT,
@@ -71,18 +71,19 @@ void Plane::render()
 {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glEnableVertexAttribArray(program->getLocation("vs_pos"));
-    glEnableVertexAttribArray(program->getLocation("vs_norm"));
-    glEnableVertexAttribArray(program->getLocation("vs_uv"));
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 
     texture->bind(GL_TEXTURE0);
 
     glDrawArrays(GL_TRIANGLES, 0, geometry.size());
 
-    glDisableVertexAttribArray(program->getLocation("vs_pos"));
-    glDisableVertexAttribArray(program->getLocation("vs_norm"));
-    glDisableVertexAttribArray(program->getLocation("vs_uv"));
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 void Plane::scale(float scaleValue)

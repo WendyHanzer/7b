@@ -44,16 +44,25 @@ out vec4 glColor;
 
 vec4 calcInternalLight(AmbientLight amb, vec3 lightDirection, vec3 normal)
 {
-    float diffFactor = max(0.0, dot(normal, -lightDirection));
+    float diffFactor = dot(normal, -lightDirection);
     vec4 ambientColor = vec4(amb.color, 1.0) * amb.intensity;
-    vec4 diffuseColor = vec4(amb.color, 1.0) * amb.diffIntensity * diffFactor;
+
+    vec4 diffuseColor = vec4(0,0,0,0);
+    vec4 specularColor = vec4(0,0,0,0);
+
+    if(diffFactor > 0) {
+        diffuseColor = vec4(amb.color, 1.0) * amb.diffIntensity * diffFactor;
 
 
-    vec3 vertexToView = normalize(cameraPos - world_pos);
-    vec3 lightReflect = normalize(reflect(-lightDirection, normal));
-    float specularFactor = max(0.0, dot(vertexToView, lightReflect));
-    specularFactor = pow(specularFactor, specularPower);
-    vec4 specularColor = vec4(amb.color, 1.0) * specularIntensity * specularFactor;
+        vec3 vertexToView = normalize(cameraPos - world_pos);
+        vec3 lightReflect = normalize(reflect(-lightDirection, normal));
+        float specularFactor = max(0.0, dot(vertexToView, lightReflect));
+
+        if(specularFactor > 0) {
+            specularFactor = pow(specularFactor, specularPower);
+            specularColor = vec4(amb.color, 1.0) * specularIntensity * specularFactor;
+        }
+    }
 
     return ambientColor + diffuseColor + specularColor;
 }

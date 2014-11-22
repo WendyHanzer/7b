@@ -10,6 +10,8 @@
 #include <glm/glm.hpp>
 #include <SDL_keycode.h>
 
+#include <iostream>
+
 ShadowMapScene::ShadowMapScene()
 {
 
