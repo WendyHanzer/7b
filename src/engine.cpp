@@ -4,8 +4,8 @@
 #include "clock.hpp"
 
 #include <SDL.h>
-//#include <gdal_priv.h>
-//#include <ogrsf_frmts.h>
+#include <gdal_priv.h>
+#include <ogrsf_frmts.h>
 #include <boost/program_options.hpp>
 
 #include <iostream>
@@ -31,6 +31,9 @@ void Engine::init()
         std::cerr << "Unable to initilize SDL" << std::endl;
         exit(1);
     }
+
+    GDALAllRegister();
+    OGRRegisterAll();
 
     input = new Input(this);
     graphics = new Graphics(this);
@@ -131,6 +134,8 @@ void Engine::parseArgs()
 
     options.verbose = vm.count("verbose");
     options.wireframe = vm.count("wireframe");
+
+    options.map_scalar = 1.0f;
 }
 
 Engine* Engine::getEngine() {

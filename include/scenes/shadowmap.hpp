@@ -10,6 +10,7 @@ class Cube;
 class Plane;
 class Program;
 class Entity;
+class GDALTerrain;
 
 class ShadowMapScene : public Scene {
 public:
@@ -22,6 +23,7 @@ public:
 private:
     Cube *cube;
     Plane *ground;
+    GDALTerrain *terrain;
     Program *program;
 
     float lightAngle;

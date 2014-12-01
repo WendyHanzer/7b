@@ -78,9 +78,7 @@ void Graphics::initGL()
     glClearColor(0.0, 0.0, 0.0, 1);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    //glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
     //glShadeModel (GL_FLAT);
 
@@ -118,6 +116,10 @@ void Graphics::render()
 
 void Graphics::stop()
 {
+//    for(auto keypair : scenes) {
+//        delete keypair.second;
+//    }
+
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
 }
@@ -158,11 +160,11 @@ void Graphics::setClearColor(const glm::vec3& color){
 void Graphics::initScenes()
 {
     scenes["shadow_map"] = new ShadowMapScene();
-    scenes["deferred_shading"] = new DeferredShadingScene();
+    //scenes["deferred_shading"] = new DeferredShadingScene();
 
     for(auto& kv : scenes) {
         kv.second->init();
     }
 
-    scene = scenes["deferred_shading"];
+    scene = scenes["shadow_map"];
 }

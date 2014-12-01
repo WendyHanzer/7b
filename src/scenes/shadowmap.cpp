@@ -6,6 +6,7 @@
 #include "graphics.hpp"
 #include "camera.hpp"
 #include "input.hpp"
+#include "gdalterrain.hpp"
 
 #include <glm/glm.hpp>
 #include <SDL_keycode.h>
@@ -21,6 +22,7 @@ ShadowMapScene::~ShadowMapScene()
 {
     if(cube) delete cube;
     if(ground) delete ground;
+    if(terrain) delete terrain;
     if(dirLight) delete dirLight;
     if(pointLight) delete pointLight;
 }
@@ -29,20 +31,22 @@ void ShadowMapScene::init()
 {
     program = Engine::getEngine()->graphics->getShaderProgram("lighting");
 
-    cube = new Cube(program, glm::vec3(0,10,0));
+    //cube = new Cube(program, glm::vec3(0,10,0));
     //cube->scale(100.0f);
-    ground = new Plane(program);
+    //ground = new Plane(program);
+    terrain = new GDALTerrain(program, "../assets/DryCreek/DCEWsqrExtent.tif");
 
     dirLight = new DirectionalLight(glm::vec3(1,1,1), glm::vec3(0,-1,0), 0.1f, 0.9f);
     pointLight = new PointLight(glm::vec3(1,1,1), glm::vec3(0,1,0), 0.1f, 0.9f);
 
-    entities = {cube, ground};
+    entities = {terrain};//{cube, ground};
 }
 
 void ShadowMapScene::tick(float dt)
 {
-    ground->tick(dt);
-    cube->tick(dt);
+    for(Entity *ent : entities) {
+        ent->tick(dt);
+    }
 
     auto engine = Engine::getEngine();
 

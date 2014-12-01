@@ -22,13 +22,17 @@ public:
     virtual void render();
 
 private:
+    void calcNormal(int x, int z, Vertex& vert, float min, float max);
+
     std::vector<Vertex> geometry;
     Program *program;
     Texture *texture;
     std::string gdalFile;
+    float heightScale;
 
     GDALDataset *dataset;
     GLuint vbo, vao;
+    std::vector<std::vector<float>> gdal_data;
 };
 
 
