@@ -50,7 +50,7 @@ void GDALTerrain::init()
     }
 
     if(Engine::getEngine()->getOptions().verbose) {
-        std::cout << "terrain: " << gdalFile << "x: " << width << " y: " << height << "   min: " << min << " max: " << max << std::endl;
+        std::cout << "terrain: " << gdalFile << " x: " << width << " y: " << height << "   min: " << min << " max: " << max << std::endl;
     }
 
     Vertex vert;
@@ -67,6 +67,8 @@ void GDALTerrain::init()
     float *lineData1 = new float[width];
     float *lineData2 = new float[width];
 
+    float range = max - min;
+
     for(int z = 0; z < height-1; z++) {
         raster->RasterIO(GF_Read, 0, z, width, 1, lineData1, width, 1, GDT_Float32, 0, 0);
         raster->RasterIO(GF_Read, 0, z+1, width, 1, lineData2, width, 1, GDT_Float32, 0, 0);
@@ -76,75 +78,82 @@ void GDALTerrain::init()
 
         for(int x = 0; x < width-1; x++) {
             vert.pos[0] = x * scale;
-            vert.pos[1] = (lineData1[x]-min)/max;
+            vert.pos[1] = heightScale * (lineData1[x]-min)/range;
             vert.pos[2] = z * scale;
 
-            vert.texture[0] = x / float(width);
-            vert.texture[1] = z / float(height);
+            vert.texture[0] = x;// / float(width);
+            vert.texture[1] = z;// / float(height);
 
-            //calcNormal(x, z, vert, min, max);
+            calcNormal(x, z, vert, min, range);
 
             geometry.push_back(vert);
 
             vert.pos[0] = (x+1) * scale;
-            vert.pos[1] = heightScale * (lineData1[x+1]-min)/max;
+            vert.pos[1] = heightScale * (lineData1[x+1]-min)/range;
             vert.pos[2] = z * scale;
 
-            vert.texture[0] = (x+1) / float(width);
-            vert.texture[1] = z / float(height);
+            vert.texture[0] = (x+1);// / float(width);
+            vert.texture[1] = z;// / float(height);
 
-            //calcNormal(x, z, vert, min, max);
+            calcNormal(x, z, vert, min, range);
 
             geometry.push_back(vert);
 
             vert.pos[0] = x * scale;
-            vert.pos[1] = heightScale * (lineData2[x]-min)/max;
+            vert.pos[1] = heightScale * (lineData2[x]-min)/range;
             vert.pos[2] = (z+1) * scale;
 
-            vert.texture[0] = x / float(width);
-            vert.texture[1] = (z+1) / float(height);
+            vert.texture[0] = x;// / float(width);
+            vert.texture[1] = (z+1);// / float(height);
 
-            //calcNormal(x, z, vert, min, max);
+            calcNormal(x, z, vert, min, range);
 
             geometry.push_back(vert);
 
 
 
             vert.pos[0] = x * scale;
-            vert.pos[1] = heightScale * (lineData2[x]-min)/max;
+            vert.pos[1] = heightScale * (lineData2[x]-min)/range;
             vert.pos[2] = (z+1) * scale;
 
-            vert.texture[0] = x / float(width);
-            vert.texture[1] = (z+1) / float(height);
+            vert.texture[0] = x;// / float(width);
+            vert.texture[1] = (z+1);// / float(height);
 
-            //calcNormal(x, z, vert, min, max);
+            calcNormal(x, z, vert, min, range);
 
             geometry.push_back(vert);
 
             vert.pos[0] = (x+1) * scale;
-            vert.pos[1] = heightScale * (lineData2[x+1]-min)/max;
+            vert.pos[1] = heightScale * (lineData2[x+1]-min)/range;
             vert.pos[2] = (z+1) * scale;
 
-            vert.texture[0] = (x+1) / float(width);
-            vert.texture[1] = (z+1) / float(height);
+            vert.texture[0] = (x+1);// / float(width);
+            vert.texture[1] = (z+1);// / float(height);
 
-            //calcNormal(x, z, vert, min, max);
+            calcNormal(x, z, vert, min, range);
 
             geometry.push_back(vert);
 
             vert.pos[0] = (x+1) * scale;
-            vert.pos[1] = heightScale * (lineData1[x+1]-min)/max;
+            vert.pos[1] = heightScale * (lineData1[x+1]-min)/range;
             vert.pos[2] = z * scale;
 
-            vert.texture[0] = (x+1) / float(width);
-            vert.texture[1] = z / float(height);
+            vert.texture[0] = (x+1);// / float(width);
+            vert.texture[1] = z;// / float(height);
 
-            //calcNormal(x, z, vert, min, max);
+            calcNormal(x, z, vert, min, range);
 
             geometry.push_back(vert);
 
         }
     }
+
+   // for(int i = 0; i < geometry.size(); i++) {
+     //   if(i % 6 == 0)
+       // std::cout << i << ": " << geometry[i].pos[1] << std::endl;
+    //}
+
+    std::cout << "size: " << geometry.size() << std::endl;
 
     delete[] lineData1;
     delete[] lineData2;
@@ -182,7 +191,7 @@ void GDALTerrain::init()
             sizeof(Vertex),
             (void*)offsetof(Vertex,texture));
 
-    texture = new Texture("../assets/reflection.jpg", GL_TEXTURE_2D);
+    texture = new Texture("../assets/desert.jpg", GL_TEXTURE_2D);
 
     //model = glm::translate(model, glm::vec3(width/2, 0, height/2));
 }
