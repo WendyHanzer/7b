@@ -9,6 +9,7 @@
 #include "shadowmap.hpp"
 #include "deferred_shading_prog.hpp"
 #include "deferred_shading.hpp"
+#include "flag.hpp"
 
 #include "gl.hpp"
 
@@ -95,6 +96,7 @@ void Graphics::initGL()
 
     programs["lighting"] = new LightingProgram();
     programs["deferred_shading"] = new DeferredShadingProgram();
+    programs["flag"] = new FlagProgram();
 }
 
 void Graphics::tick(float dt)

@@ -191,7 +191,7 @@ void GDALTerrain::init()
             sizeof(Vertex),
             (void*)offsetof(Vertex,texture));
 
-    texture = new Texture("../assets/desert.jpg", GL_TEXTURE_2D);
+    texture = new Texture("../assets/desert2.jpg", GL_TEXTURE_2D);
 
     //model = glm::translate(model, glm::vec3(width/2, 0, height/2));
 }

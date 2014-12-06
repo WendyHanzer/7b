@@ -23,7 +23,7 @@ void Plane::init()
 {
     texture = new Texture("../assets/reflection.jpg", GL_TEXTURE_2D);
 
-    geometry = Mesh::load("../assets/objects/plane.obj");
+    geometry = Mesh::load("../assets/objects/plane.ply");
 
     for(auto& vertex : geometry) {
         vertex.texture[0] = vertex.pos[0] / 10.0f;
@@ -69,6 +69,7 @@ void Plane::tick(float dt)
 
 void Plane::render()
 {
+    program->bind();
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glEnableVertexAttribArray(0);
@@ -84,9 +85,10 @@ void Plane::render()
     glDisableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    program->unbind();
 }
 
 void Plane::scale(float scaleValue)
 {
-    model = glm::scale(model, glm::vec3(scaleValue,1.0f,scaleValue));
+    model = glm::scale(model, glm::vec3(scaleValue,scaleValue,scaleValue));
 }

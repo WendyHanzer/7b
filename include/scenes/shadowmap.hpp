@@ -23,14 +23,17 @@ public:
 private:
     Cube *cube;
     Plane *ground;
+    Plane *flag;
     GDALTerrain *terrain;
-    Program *program;
+    Program *lighting_program;
+    Program *flag_program;
 
     float lightAngle;
     DirectionalLight *dirLight;
     PointLight *pointLight;
     //std::vector<Light*> lights;
     std::vector<Entity*> entities;
+    std::vector<Program*> programs;
 };
 
 #endif // SHADOW_MAP_SCENE_HPP

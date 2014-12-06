@@ -71,6 +71,7 @@ void Cube::tick(float dt)
 
 void Cube::render()
 {
+    program->bind();
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glEnableVertexAttribArray(0);
@@ -86,6 +87,7 @@ void Cube::render()
     glDisableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    program->unbind();
 }
 
 void Cube::scale(float scaleValue)

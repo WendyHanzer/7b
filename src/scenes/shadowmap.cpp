@@ -25,21 +25,30 @@ ShadowMapScene::~ShadowMapScene()
     if(terrain) delete terrain;
     if(dirLight) delete dirLight;
     if(pointLight) delete pointLight;
+
+    if(flag) delete flag;
 }
 
 void ShadowMapScene::init()
 {
-    program = Engine::getEngine()->graphics->getShaderProgram("lighting");
+    lighting_program = Engine::getEngine()->graphics->getShaderProgram("lighting");
+    flag_program = Engine::getEngine()->graphics->getShaderProgram("flag");
 
-    //cube = new Cube(program, glm::vec3(0,10,0));
+    cube = new Cube(lighting_program, glm::vec3(0,10,0));
     //cube->scale(100.0f);
-    //ground = new Plane(program);
-    terrain = new GDALTerrain(program, "../assets/DryCreek/DCEWsqrExtent.tif");
+    ground = new Plane(lighting_program);
+
+    flag = new Plane(flag_program);
+    flag->rotate(90, glm::vec3(1,0,0));
+    flag->translate(glm::vec3(0,50,0));
+    //flag->scale(100);
+    //terrain = new GDALTerrain(lighting_program, "../assets/DryCreek/DCEWsqrExtent.tif");
 
     dirLight = new DirectionalLight(glm::vec3(1,1,1), glm::vec3(0,-1,0), 0.1f, 0.9f);
     pointLight = new PointLight(glm::vec3(1,1,1), glm::vec3(0,1,0), 0.1f, 0.9f);
 
-    entities = {terrain};//{cube, ground};
+    entities = {cube, ground, flag};
+    programs = {lighting_program, flag_program};
 }
 
 void ShadowMapScene::tick(float dt)
@@ -66,19 +75,27 @@ void ShadowMapScene::tick(float dt)
 
 void ShadowMapScene::render()
 {
+    static float waveTime = 0.2f, waveWidth = 0.2f, waveHeight = 3.0f, waveFreq = 0.05f;
+
     auto camera = Engine::getEngine()->graphics->camera;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    program->bind();
-    program->set("ambientIntensity", dirLight->intensity);
-    program->set("diffuseIntensity", dirLight->diffIntensity);
-    program->set("light_dir", dirLight->direction);
-    program->set("pointLightPos", pointLight->pos);
-    //program->set("specularIntensity", 0.3f);
-    //program->set("specularPower", 0.3f);
-    program->set("cameraPos", camera->getPos());
-    program->set("spotLightDir", camera->getOrientation());
-    program->set("tex", 0);
+
+    for(Program *prog : programs) {
+        prog->bind();
+        prog->set("ambientIntensity", dirLight->intensity);
+        prog->set("diffuseIntensity", dirLight->diffIntensity);
+        prog->set("light_dir", dirLight->direction);
+        prog->set("pointLightPos", pointLight->pos);
+        //prog->set("specularIntensity", 0.3f);
+        //prog->set("specularPower", 0.3f);
+        prog->set("cameraPos", camera->getPos());
+        prog->set("spotLightDir", camera->getOrientation());
+        prog->set("tex", 0);
+        prog->unbind();
+    }
+
+    waveTime += waveFreq;
 
     auto& view = Engine::getEngine()->graphics->view;
     auto& proj = Engine::getEngine()->graphics->projection;
@@ -86,11 +103,22 @@ void ShadowMapScene::render()
         const auto& model = ent->getModel();
         glm::mat4 mvp = proj * view * model;
 
-        program->set("mvp", mvp);
-        program->set("modelMatrix", model);
+
+        lighting_program->bind();
+        lighting_program->set("mvp", mvp);
+        lighting_program->set("modelMatrix", model);
+        lighting_program->unbind();
+
+        flag_program->bind();
+        flag_program->set("mvp", mvp);
+        flag_program->set("modelMatrix", model);
+        flag_program->set("waveTime", waveTime);
+        flag_program->set("waveWidth", waveWidth);
+        flag_program->set("waveHeight", waveHeight);
+        flag_program->unbind();
         ent->render();
     }
 
-    program->unbind();
+    //lighting_program->unbind();
 }
 
