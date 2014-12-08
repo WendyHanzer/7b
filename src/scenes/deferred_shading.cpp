@@ -25,7 +25,7 @@ void DeferredShadingScene::init()
 
     cube = new Cube(program, glm::vec3(0,10,0));
     //cube->scale(100.0f);
-    ground = new Plane(program);
+    ground = new Plane(program, "../assets/desert.jpg");
 
     entities = {cube, ground};
 }

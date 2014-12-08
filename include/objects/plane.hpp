@@ -2,6 +2,7 @@
 #define PLANE_HPP
 
 #include <vector>
+#include <string>
 
 #include <glm/glm.hpp>
 
@@ -13,7 +14,7 @@ class Texture;
 
 class Plane : public Entity {
 public:
-    Plane(Program *prog, int width = 200, int height = 200);
+    Plane(Program *prog, const std::string& texture, int width = 200, int height = 200);
     virtual ~Plane();
 
     virtual void init();
@@ -30,6 +31,7 @@ private:
     Texture *texture;
     glm::mat4 model;
 
+    std::string textureFile;
     GLuint vbo, vao;
 };
 

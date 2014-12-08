@@ -35,6 +35,8 @@ void Texture::init()
         glBindTexture(target, textureID);
         glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        //glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
         if(target == GL_TEXTURE_2D) {
             glTexImage2D(target, 0, GL_RGBA, image.getWidth(), image.getHeight(),

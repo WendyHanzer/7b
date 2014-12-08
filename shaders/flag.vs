@@ -21,8 +21,9 @@ void main(void)
     v.y += cos(waveWidth * v.x + waveTime) * waveHeight;
 
     gl_Position = mvp * v;
-    fs_uv = vs_uv;
+    fs_uv = normalize(vs_uv);
 
     world_pos = (modelMatrix * vec4(vs_pos,1.0)).xyz;
     fs_norm = (modelMatrix * vec4(vs_norm, 0.0)).xyz;
+
 }

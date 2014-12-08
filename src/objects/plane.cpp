@@ -8,9 +8,10 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-Plane::Plane(Program *prog, int width, int height)
+Plane::Plane(Program *prog, const std::string& texture, int width, int height)
 {
     program = prog;
+    textureFile = texture;
     init();
 }
 
@@ -21,7 +22,7 @@ Plane::~Plane()
 
 void Plane::init()
 {
-    texture = new Texture("../assets/reflection.jpg", GL_TEXTURE_2D);
+    texture = new Texture(textureFile.c_str(), GL_TEXTURE_2D);
 
     geometry = Mesh::load("../assets/objects/plane.ply");
 

@@ -36,9 +36,9 @@ void ShadowMapScene::init()
 
     cube = new Cube(lighting_program, glm::vec3(0,10,0));
     //cube->scale(100.0f);
-    ground = new Plane(lighting_program);
+    ground = new Plane(lighting_program, "../assets/desert2.jpg");
 
-    flag = new Plane(flag_program);
+    flag = new Plane(flag_program, "../assets/flag.jpg");
     flag->rotate(90, glm::vec3(1,0,0));
     flag->translate(glm::vec3(0,50,0));
     //flag->scale(100);
