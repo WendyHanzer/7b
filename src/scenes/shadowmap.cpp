@@ -7,6 +7,7 @@
 #include "camera.hpp"
 #include "input.hpp"
 #include "gdalterrain.hpp"
+#include "particles.hpp"
 
 #include <glm/glm.hpp>
 #include <SDL_keycode.h>
@@ -33,21 +34,29 @@ void ShadowMapScene::init()
 {
     lighting_program = Engine::getEngine()->graphics->getShaderProgram("lighting");
     flag_program = Engine::getEngine()->graphics->getShaderProgram("flag");
+    prog_update = Engine::getEngine()->graphics->getShaderProgram("particles_update");
+    prog_render = Engine::getEngine()->graphics->getShaderProgram("particles_render");
 
-    cube = new Cube(lighting_program, glm::vec3(0,10,0));
+    //cube = new Cube(lighting_program, glm::vec3(0,10,0));
     //cube->scale(100.0f);
-    ground = new Plane(lighting_program, "../assets/desert2.jpg");
+    ground = new Plane(lighting_program, "../assets/dirt.png", 1000, 1000);
+    ground->translate(glm::vec3(-ground->getWidth()/2, 0, -ground->getHeight()/2));
 
-    flag = new Plane(flag_program, "../assets/flag.jpg");
+    flag = new Plane(flag_program, "../assets/flag.jpg", 15, 15);
     flag->rotate(90, glm::vec3(1,0,0));
-    flag->translate(glm::vec3(0,50,0));
-    //flag->scale(100);
+    flag->translate(glm::vec3(0,0,-40));
+    flag->scale(100);
+
+    flag_pole = new Entity(lighting_program, "../assets/objects/flagpole.obj", "../assets/gray.jpg");
     //terrain = new GDALTerrain(lighting_program, "../assets/DryCreek/DCEWsqrExtent.tif");
+
+    particle_system = new ParticleSystem(prog_update, prog_render);
+    particle_system->initWithPos(glm::vec3(0));
 
     dirLight = new DirectionalLight(glm::vec3(1,1,1), glm::vec3(0,-1,0), 0.1f, 0.9f);
     pointLight = new PointLight(glm::vec3(1,1,1), glm::vec3(0,1,0), 0.1f, 0.9f);
 
-    entities = {cube, ground, flag};
+    entities = {ground, flag, flag_pole};
     programs = {lighting_program, flag_program};
 }
 
@@ -71,6 +80,8 @@ void ShadowMapScene::tick(float dt)
     float x = -sinf(lightAngle + 1.57f);
 
     dirLight->direction = glm::vec3(x,y,0.0f);
+
+    currentDT = dt;
 }
 
 void ShadowMapScene::render()
@@ -80,6 +91,8 @@ void ShadowMapScene::render()
     auto camera = Engine::getEngine()->graphics->camera;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    particle_system->renderWithDT(currentDT);
 
     for(Program *prog : programs) {
         prog->bind();

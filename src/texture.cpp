@@ -5,6 +5,11 @@
 
 #include <FreeImagePlus.h>
 
+Texture::Texture(GLenum type)
+    : target(type)
+{
+}
+
 Texture::Texture(const std::string& fileName, GLenum type)
     : file_name(fileName), target(type)
 {
@@ -35,7 +40,7 @@ void Texture::init()
         glBindTexture(target, textureID);
         glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        
+
         //glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
         if(target == GL_TEXTURE_2D) {

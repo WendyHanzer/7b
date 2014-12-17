@@ -1,35 +1,31 @@
-#include "cube.hpp"
+#include "entity.hpp"
 #include "texture.hpp"
-#include "engine.hpp"
-#include "graphics.hpp"
-#include "programs/lighting.hpp"
-#include "gl.hpp"
+#include "program.hpp"
 #include "mesh.hpp"
 
-#include <glm/gtc/matrix_transform.hpp>
+Entity::Entity()
+{
 
-#include <iostream>
+}
 
-Cube::Cube(Program *prog, const glm::vec3& pos)
+Entity::Entity(Program *prog, const std::string& file, const std::string& textureFile)
 {
     program = prog;
-    init();
-
-    model = glm::translate(model, pos);
+    texture = nullptr;
+    initWithFiles(file, textureFile);
 }
 
-Cube::~Cube()
+Entity::~Entity()
 {
 
 }
 
-void Cube::init()
+void Entity::initWithFiles(const std::string& file, const std::string& textureFile)
 {
-    texture = new Texture("../assets/reflection.jpg", GL_TEXTURE_2D);
+    if(textureFile != "")
+        texture = new Texture(textureFile, GL_TEXTURE_2D);
 
-    geometry = Mesh::load("../assets/objects/cube.obj");
-
-    //std::cout << "Geometry: " << geometry.size() << std::endl;
+    geometry = Mesh::load(file);
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -64,34 +60,33 @@ void Cube::init()
 
 }
 
-void Cube::tick(float dt)
+void Entity::init()
 {
-    model = glm::rotate(model, 10.0f * dt, glm::vec3(0,1,0));
+
 }
 
-void Cube::render()
+void Entity::tick(float dt)
 {
-    Entity::render();
-    // program->bind();
-    // glBindVertexArray(vao);
-    // glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    // glEnableVertexAttribArray(0);
-    // glEnableVertexAttribArray(1);
-    // glEnableVertexAttribArray(2);
 
-    // texture->bind(GL_TEXTURE0);
-
-    // glDrawArrays(GL_TRIANGLES, 0, geometry.size());
-
-    // glDisableVertexAttribArray(0);
-    // glDisableVertexAttribArray(1);
-    // glDisableVertexAttribArray(2);
-
-    // glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // program->unbind();
 }
 
-void Cube::scale(float scaleValue)
+void Entity::render()
 {
-    model = glm::scale(model, glm::vec3(scaleValue,scaleValue,scaleValue));
+    program->bind();
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+
+    if(texture) texture->bind(GL_TEXTURE0);
+
+    glDrawArrays(GL_TRIANGLES, 0, geometry.size());
+
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    program->unbind();
 }

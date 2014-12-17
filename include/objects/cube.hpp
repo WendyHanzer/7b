@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 
 #include "entity.hpp"
-#include "vertex.hpp"
 
 class Program;
 class Texture;
@@ -25,11 +24,10 @@ public:
 private:
     void initGeometry();
 
-    std::vector<Vertex> geometry;
     Program *program;
     Texture *texture;
 
-    GLuint vbo, vao;
+    //GLuint vbo, vao;
 };
 
 #endif // CUBE_HPP

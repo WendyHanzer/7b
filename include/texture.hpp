@@ -7,13 +7,14 @@
 
 class Texture {
 public:
+    Texture(GLenum type);
     Texture(const std::string& fileName, GLenum type);
-    ~Texture();
+    virtual ~Texture();
 
-    void init();
-    void bind(GLenum textureUnit);
+    virtual void init();
+    virtual void bind(GLenum textureUnit);
 
-private:
+protected:
     std::string file_name;
     GLenum target;
     GLuint textureID;

@@ -18,7 +18,7 @@ out vec3 world_pos;
 void main(void)
 {
     vec4 v = vec4(vs_pos,1.0);
-    v.y += cos(waveWidth * v.x + waveTime) * waveHeight;
+    v.y += cos(waveWidth * v.x + waveTime) * waveHeight * vs_uv.x;
 
     gl_Position = mvp * v;
     fs_uv = normalize(vs_uv);

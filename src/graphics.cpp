@@ -10,6 +10,8 @@
 #include "deferred_shading_prog.hpp"
 #include "deferred_shading.hpp"
 #include "flag.hpp"
+#include "particle_prog_update.hpp"
+#include "particle_prog_render.hpp"
 
 #include "gl.hpp"
 
@@ -97,6 +99,8 @@ void Graphics::initGL()
     programs["lighting"] = new LightingProgram();
     programs["deferred_shading"] = new DeferredShadingProgram();
     programs["flag"] = new FlagProgram();
+    programs["particles_update"] = new ParticleUpdateProgram();
+    programs["particles_render"] = new ParticleRenderProgram();
 }
 
 void Graphics::tick(float dt)

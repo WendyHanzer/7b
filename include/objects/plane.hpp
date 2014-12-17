@@ -14,7 +14,7 @@ class Texture;
 
 class Plane : public Entity {
 public:
-    Plane(Program *prog, const std::string& texture, int width = 200, int height = 200);
+    Plane(Program *prog, const std::string& texture, int plane_width = 200, int plane_height = 200);
     virtual ~Plane();
 
     virtual void init();
@@ -24,15 +24,16 @@ public:
     virtual void scale(float scaleValue);
 
 private:
-    void initGeometry();
+    void calcNormal(int x, int z, Vertex& vert);
 
-    std::vector<Vertex> geometry;
+    std::vector<unsigned int> indices;
     Program *program;
     Texture *texture;
     glm::mat4 model;
 
     std::string textureFile;
-    GLuint vbo, vao;
+    GLuint vio;
+    float density;
 };
 
 #endif // PLANE_HPP

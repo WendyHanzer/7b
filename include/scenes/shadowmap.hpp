@@ -11,6 +11,7 @@ class Plane;
 class Program;
 class Entity;
 class GDALTerrain;
+class ParticleSystem;
 
 class ShadowMapScene : public Scene {
 public:
@@ -24,11 +25,16 @@ private:
     Cube *cube;
     Plane *ground;
     Plane *flag;
+    Entity *flag_pole;
     GDALTerrain *terrain;
     Program *lighting_program;
     Program *flag_program;
+    Program *prog_update, *prog_render;
+
+    ParticleSystem *particle_system;
 
     float lightAngle;
+    float currentDT;
     DirectionalLight *dirLight;
     PointLight *pointLight;
     //std::vector<Light*> lights;
