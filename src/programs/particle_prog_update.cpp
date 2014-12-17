@@ -34,8 +34,7 @@ void ParticleUpdateProgram::unbind()
 void ParticleUpdateProgram::loadShaders()
 {
     shaders[0] = Program::loadShader("../shaders/particles_update.vs", GL_VERTEX_SHADER);
-    shaders[1] = Program::loadShader("../shaders/particles_update.fs", GL_FRAGMENT_SHADER);
-    shaders[2] = Program::loadShader("../shaders/particles_update.gs", GL_GEOMETRY_SHADER);
+    shaders[1] = Program::loadShader("../shaders/particles_update.gs", GL_GEOMETRY_SHADER);
 }
 
 void ParticleUpdateProgram::initProgram()
@@ -43,7 +42,6 @@ void ParticleUpdateProgram::initProgram()
     program = glCreateProgram();
     glAttachShader(program, shaders[0]);
     glAttachShader(program, shaders[1]);
-    glAttachShader(program, shaders[2]);
 
 
     const GLchar* varyings[4];

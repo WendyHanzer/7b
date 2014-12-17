@@ -54,8 +54,8 @@ void Camera::rotate(float x, float y)
 
 void Camera::update()
 {
-  if(pos.y < 5.0f)
-    pos.y = 5.0f;
+  /*if(pos.y < 5.0f)
+    pos.y = 5.0f;*/
 
     if(rotateX != 0.0f)
         orientation = glm::rotate(orientation, rotateX, up);

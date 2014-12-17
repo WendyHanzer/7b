@@ -71,7 +71,7 @@ void Engine::stop(int exit_code)
     exit(exit_code);
 }
 
-const Options& Engine::getOptions() const
+Options& Engine::getOptions()
 {
     return options;
 }
@@ -136,6 +136,9 @@ void Engine::parseArgs()
     options.wireframe = vm.count("wireframe");
 
     options.map_scalar = 1.0f;
+
+    options.update_partial = false;
+    options.loading_done = false;
 }
 
 Engine* Engine::getEngine() {

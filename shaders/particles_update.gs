@@ -2,7 +2,7 @@
 
 layout(points) in;
 layout(points) out;
-layout(max_vertices = 30) out;
+layout(max_vertices = 100) out;
 
 in float Type0[];
 in vec3 Position0[];
@@ -61,7 +61,7 @@ void main()
         float t1 = Age0[0] / 1000.0;
         float t2 = Age / 1000.0;
         vec3 DeltaP = DeltaTimeSecs * Velocity0[0];
-        vec3 DeltaV = vec3(DeltaTimeSecs) * (0.0, -9.81, 0.0);
+        vec3 DeltaV = vec3(DeltaTimeSecs) * (0.0, -0.981, 0.0);
 
         if (Type0[0] == PARTICLE_TYPE_SHELL)  {
             if (Age < shell_lifetime) {
@@ -73,7 +73,7 @@ void main()
                 EndPrimitive();
             }
             else {
-                for (int i = 0 ; i < 10 ; i++) {
+                for (int i = 0 ; i < 100 ; i++) {
                      Type1 = PARTICLE_TYPE_SECONDARY_SHELL;
                      Position1 = Position0[0];
                      vec3 Dir = GetRandomDir((time + i)/1000.0);

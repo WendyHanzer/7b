@@ -58,6 +58,8 @@ void Entity::initWithFiles(const std::string& file, const std::string& textureFi
                             sizeof(Vertex),
                             (void*)offsetof(Vertex,texture));
 
+    glBindVertexArray(0);
+
 }
 
 void Entity::init()

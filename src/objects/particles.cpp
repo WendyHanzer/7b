@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#define MAX_PARTICLES 1000
+#define MAX_PARTICLES 10000
 
 #define PARTICLE_LIFETIME 10.0f
 
@@ -65,13 +65,13 @@ void ParticleSystem::initWithPos(const glm::vec3& pos)
 
    update_prog->bind();
    update_prog->set("random_texture", RANDOM_TEXTURE_UNIT_INDEX);
-   update_prog->set("launcher_lifetime", 100.0f);
-   update_prog->set("shell_lifetime", 10000.0f);
+   update_prog->set("launcher_lifetime", 250.0f);
+   update_prog->set("shell_lifetime", 1500.0f);
    update_prog->set("secondary_shell_lifetime", 2500.0f);
 
    render_prog->bind();
    render_prog->set("color_map", COLOR_TEXTURE_UNIT_INDEX);
-   render_prog->set("billboard_size", 0.8f);
+   render_prog->set("billboard_size", 2.0f);
 
    glBindVertexArray(0);
 }
@@ -97,16 +97,17 @@ void ParticleSystem::updateParticles(float dt)
     random_texture->bind(RANDOM_TEXTURE_UNIT);
     glEnable(GL_RASTERIZER_DISCARD);
     glBindBuffer(GL_ARRAY_BUFFER, particleBuffer[currVB]);
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback[currTFB]);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
 
-    glVertexAttribPointer(0,1,GL_FLOAT,GL_FALSE,sizeof(Particle),(void*) offsetof(Particle,type)); // type
-    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Particle),(void*) offsetof(Particle,pos)); // position
-    glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(Particle),(void*) offsetof(Particle,vel)); // velocity
-    glVertexAttribPointer(3,1,GL_FLOAT,GL_FALSE,sizeof(Particle),(void*) offsetof(Particle,lifetime)); // lifetime
+    glVertexAttribPointer(0,1,GL_FLOAT,GL_FALSE,sizeof(Particle),(void*) 0); // type
+    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Particle),(void*) 4); // position
+    glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(Particle),(void*) 16); // velocity
+    glVertexAttribPointer(3,1,GL_FLOAT,GL_FALSE,sizeof(Particle),(void*) 28); // lifetime
 
     glBeginTransformFeedback(GL_POINTS);
 
@@ -124,8 +125,6 @@ void ParticleSystem::updateParticles(float dt)
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
     glDisableVertexAttribArray(3);
-
-    glBindVertexArray(0);
 }
 
 void ParticleSystem::renderParticles()
@@ -142,7 +141,7 @@ void ParticleSystem::renderParticles()
     glDisable(GL_RASTERIZER_DISCARD);
     glBindBuffer(GL_ARRAY_BUFFER, particleBuffer[currTFB]);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle,pos));  // position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)4);  // position
     glDrawTransformFeedback(GL_POINTS, transformFeedback[currTFB]);
     glDisableVertexAttribArray(0);
     glBindVertexArray(0);

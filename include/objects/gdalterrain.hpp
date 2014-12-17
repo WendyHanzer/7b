@@ -21,6 +21,8 @@ public:
     virtual void tick(float dt);
     virtual void render();
 
+    void center();
+
 private:
     void calcNormal(int x, int z, Vertex& vert, float min, float max);
 
@@ -31,6 +33,7 @@ private:
 
     GDALDataset *dataset;
     //GLuint vbo, vao;
+    std::vector<Vertex> new_vec;
     std::vector<std::vector<float>> gdal_data;
 };
 

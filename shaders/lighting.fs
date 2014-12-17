@@ -36,6 +36,8 @@ uniform float ambientIntensity, diffuseIntensity;
 uniform sampler2D tex;
 uniform vec3 pointLightPos;
 uniform vec3 spotLightDir;
+uniform float enableSpotLight;
+
 
 in vec3 fs_norm;
 in vec2 fs_uv;
@@ -112,25 +114,49 @@ void main() {
     d_light.ambient = light;
     d_light.direction = light_dir;
 
-    Attenuation atten;
-    atten.constant = 1;
-    atten.linear = 0.005;
-    atten.ex = 0.0;
+    Attenuation atten_spot;
+    atten_spot.constant = 1;
+    atten_spot.linear = 0.005;
+    atten_spot.ex = 0.0;
 
-    PointLight p_light;
-    p_light.ambient = light;
-    p_light.pos = cameraPos;
-    p_light.attenuation = atten;
+    PointLight p_light_spot;
+    p_light_spot.ambient = light;
+    p_light_spot.pos = cameraPos;
+    p_light_spot.attenuation = atten_spot;
 
     SpotLight s_light;
-    s_light.point = p_light;
+    s_light.point = p_light_spot;
     s_light.direction = normalize(spotLightDir);
     s_light.cutoff = 0.95;
+
+    Attenuation atten_point;
+    atten_point.constant = 1;
+    atten_point.linear = 0.005;
+    atten_point.ex = 0.001;
+
+    PointLight p_light_point;
+    p_light_point.ambient = light;
+    p_light_point.ambient.color = vec3(1,0,0);
+    p_light_point.pos = vec3(0,100,-500);
+    p_light_point.attenuation = atten_point;
 
     vec4 totalLight = vec4(0,0,0,0);
 
     totalLight += calcDirectionalLight(d_light, fs_norm);
-    //totalLight += calcPointLight(p_light, fs_norm);
+
+    for(int i = 0; i < 25; i++) {
+        totalLight += calcPointLight(p_light_point, fs_norm);
+
+        p_light_point.pos.z += 100;
+
+        if(i % 2 == 0) {
+            p_light_point.ambient.color = vec3(0,1,0);
+        }
+
+        else {
+            p_light_point.ambient.color = vec3(1,0,0);
+        }
+    }
     totalLight += calcSpotLight(s_light, fs_norm);
 
     glColor = vec4((texture(tex, fs_uv) * totalLight).xyz, 1.0);

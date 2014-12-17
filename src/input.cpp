@@ -97,6 +97,10 @@ void Input::tick(float dt)
                         keyPresses[SDLK_RIGHT] = true;
 
                     break;
+
+                    case SDLK_b:
+                        engine->getOptions().update_partial = true;
+                        break;
                 }
 
             break;

@@ -21,6 +21,8 @@ struct Options {
     int max_particles;
 
     std::vector<unsigned int> water_size;
+
+    bool update_partial, loading_done;
 };
 
 class Input;
@@ -36,7 +38,7 @@ public:
 
     void stop(int exit_code = 0);
 
-    const Options& getOptions() const;
+    Options& getOptions();
     std::vector<std::string> getCmdArgs() const;
 
     static Engine* getEngine();

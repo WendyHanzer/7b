@@ -33,7 +33,7 @@ void FlagProgram::unbind()
 void FlagProgram::loadShaders()
 {
     shaders[0] = Program::loadShader("../shaders/flag.vs", GL_VERTEX_SHADER);
-    shaders[1] = Program::loadShader("../shaders/flag.fs", GL_FRAGMENT_SHADER);
+    shaders[1] = Program::loadShader("../shaders/lighting.fs", GL_FRAGMENT_SHADER);
 }
 
 void FlagProgram::initProgram()

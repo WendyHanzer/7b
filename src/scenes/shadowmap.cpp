@@ -39,16 +39,18 @@ void ShadowMapScene::init()
 
     //cube = new Cube(lighting_program, glm::vec3(0,10,0));
     //cube->scale(100.0f);
-    ground = new Plane(lighting_program, "../assets/dirt.png", 1000, 1000);
-    ground->translate(glm::vec3(-ground->getWidth()/2, 0, -ground->getHeight()/2));
+    //ground = new Plane(lighting_program, "../assets/dirt.png", 1000, 1000);
+    //ground->translate(glm::vec3(-ground->getWidth()/2, 0, -ground->getHeight()/2));
 
     flag = new Plane(flag_program, "../assets/flag.jpg", 15, 15);
+    flag->translate(glm::vec3(1,90,0));
     flag->rotate(90, glm::vec3(1,0,0));
-    flag->translate(glm::vec3(0,0,-40));
-    flag->scale(100);
+    //flag->scale(100);
 
     flag_pole = new Entity(lighting_program, "../assets/objects/flagpole.obj", "../assets/gray.jpg");
-    //terrain = new GDALTerrain(lighting_program, "../assets/DryCreek/DCEWsqrExtent.tif");
+    flag_pole->translate(glm::vec3(0,50,0));
+    terrain = new GDALTerrain(lighting_program, "../assets/DryCreek/DCEWsqrExtent.tif");
+    terrain->center();
 
     particle_system = new ParticleSystem(prog_update, prog_render);
     particle_system->initWithPos(glm::vec3(0));
@@ -56,7 +58,7 @@ void ShadowMapScene::init()
     dirLight = new DirectionalLight(glm::vec3(1,1,1), glm::vec3(0,-1,0), 0.1f, 0.9f);
     pointLight = new PointLight(glm::vec3(1,1,1), glm::vec3(0,1,0), 0.1f, 0.9f);
 
-    entities = {ground, flag, flag_pole};
+    entities = {terrain, flag_pole, flag};
     programs = {lighting_program, flag_program};
 }
 
@@ -92,7 +94,8 @@ void ShadowMapScene::render()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    particle_system->renderWithDT(currentDT);
+    if(Engine::getEngine()->getOptions().loading_done)
+        particle_system->renderWithDT(currentDT);
 
     for(Program *prog : programs) {
         prog->bind();

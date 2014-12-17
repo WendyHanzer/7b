@@ -34,8 +34,8 @@ void GDALTerrain::init()
 
     auto raster = dataset->GetRasterBand(1);
 
-    int width = raster->GetXSize();
-    int height = raster->GetYSize();
+    width = raster->GetXSize();
+    height = raster->GetYSize();
 
     int gotMin, gotMax;
     float min = (float) raster->GetMinimum(&gotMin);
@@ -161,8 +161,8 @@ void GDALTerrain::init()
     Vertex *geo = geometry.data();
 
     glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao); 
     glGenBuffers(1, &vbo);
-    glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * geometry.size(), geo, GL_STATIC_DRAW);
@@ -191,7 +191,7 @@ void GDALTerrain::init()
             sizeof(Vertex),
             (void*)offsetof(Vertex,texture));
 
-    texture = new Texture("../assets/desert2.jpg", GL_TEXTURE_2D);
+    texture = new Texture("../assets/desert.jpg", GL_TEXTURE_2D);
 
     //model = glm::translate(model, glm::vec3(width/2, 0, height/2));
 }
@@ -203,6 +203,11 @@ void GDALTerrain::tick(float dt)
 
 void GDALTerrain::render()
 {
+    if(!Engine::getEngine()->getOptions().update_partial)
+        return;
+
+    static int i = 1;
+    program->bind();
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glEnableVertexAttribArray(0);
@@ -211,13 +216,21 @@ void GDALTerrain::render()
 
     texture->bind(GL_TEXTURE0);
 
-    glDrawArrays(GL_TRIANGLES, 0, geometry.size());
+    glDrawArrays(GL_TRIANGLES, 0, i);
+
+    if(i < geometry.size()-width*10)
+        i += width*10;
+
+    else {
+        Engine::getEngine()->getOptions().loading_done = true;
+    }
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    program->unbind();
 }
 
 void GDALTerrain::calcNormal(int x, int z, Vertex& vert, float min, float max)
@@ -254,4 +267,9 @@ void GDALTerrain::calcNormal(int x, int z, Vertex& vert, float min, float max)
         vert.normal[2] = normal.z;
     }
 
+}
+
+void GDALTerrain::center()
+{
+    model = glm::translate(model, glm::vec3(-width/2, 0, -height/2));
 }

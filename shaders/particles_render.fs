@@ -9,7 +9,7 @@ void main()
 {                                                                                   
     FragColor = texture2D(color_map, TexCoord);                                     
                                                                                     
-    if (FragColor.r >= 0.9 && FragColor.g >= 0.9 && FragColor.b >= 0.9) {           
+    if (FragColor.r >= 0.5 && FragColor.g >= 0.5 && FragColor.b >= 0.5) {           
         discard;                                                                    
     }                                                                               
 }
